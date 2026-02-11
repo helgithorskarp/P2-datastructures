@@ -61,7 +61,7 @@ void resize(int new_size) {
 
 
     T pop_back() {
-        if (m_size == 0) return T{};   
+        if (m_size == 0) return T();   
 
         T value = m_array[m_size - 1];
         --m_size;
@@ -87,7 +87,7 @@ void resize(int new_size) {
 
     T erase(int index) {
         if (index < 0 || index >= m_size) {
-            return T{};
+            return T();
         }
 
         T return_item = m_array[index];

@@ -22,7 +22,6 @@ template <typename T>
         m_size = 0;
     }
 
-
     
 DLL(const DLL& other) {
     sentinel = get_copy_list(other.sentinel);

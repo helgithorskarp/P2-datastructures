@@ -33,7 +33,14 @@ The sentinel is always present and simplifies edge cases (empty list, insert/era
 
 ### Dequeue
 
-Not implemented.
+Implemented a dequeue using a circular buffer implementation.
+
+In this implementation, we use a dynamically allocated array to store the elements and modular arithmetic to access them.
+
+- **Initial capacity:** 8
+- **When dequeue grows:** When `size == capacity`, allocate a new array of size `capacity * 2` and copy elements over.
+- **Assumptions:** We assume that the type used has a default constructor. 
+- **Kattis Submission:** https://ru.kattis.com/courses/T-403-FORC/FORC2026/assignments/aaohpd/submissions/19165302
 
 ### Heap
 

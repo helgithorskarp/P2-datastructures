@@ -36,6 +36,8 @@ struct Treap
         root = nullptr;
     }
 
+    /// O(n) operation where n is the amount of nodes in other tree, 
+    /// we have to do a preorder traversal to construct the new tree O(n)
     Treap(const Treap& other) {
         /// approach, inorder recursion of existing other, and construct the new tree as we go along
         if (other.root != nullptr) {
@@ -47,7 +49,7 @@ struct Treap
     }
 
 
-
+    /// O(n) where n are the amount of nodes in the other tree, inorder traversal
     Node * preorderInitializer(Node * other_node, Node * curr_node) {
    
         if (other_node->left != nullptr) {
@@ -64,12 +66,12 @@ struct Treap
     }
 
 
-
+    /// O(1)
     int rand_int() {
         return std::rand();
     }
 
-
+    // O(1), simply moves a few pointers around parent
     Node* rotate_right(Node* parent) {
         Node* left_child = parent->left;
         Node* left_right_child = left_child->right;
@@ -89,6 +91,7 @@ struct Treap
     }
 
     
+     // O(1), simply moves a few pointers around parent
     Node *rotate_left(Node * parent) {
         Node * right_child = parent->right;
         Node * right_left_child = right_child->left;
@@ -105,10 +108,12 @@ struct Treap
         return right_child; /// new root of subtree
     }
 
-        Node * Find(T_k k) {
+    /// this is the find function user calls, 
+    /// average case is O(log n)
+    /// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
+    Node * Find(T_k k) {
         return Find(k, root);
     }
-
     Node * Find(T_k k, Node * node) {
         if (node == nullptr) {
             return nullptr;
@@ -124,7 +129,9 @@ struct Treap
     }
 
 
-
+    /// this is the function user calls
+    /// average case is O(log n) if priorities are truly random
+    /// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
     Node* insert(T_k k, T_v v) {
         if (root == nullptr) {
             root = new Node(0, 0, k, v);
@@ -147,7 +154,6 @@ struct Treap
     }
 
     
-
 
  Node* insert(Node* new_node, Node* cur) {
     if (cur == nullptr) return new_node;
@@ -174,24 +180,26 @@ struct Treap
 }
 
 
-
-    Node * lower_bound(T_k k) {
+/// both upper and lower bound both call the bound helper function, with just a flag indecating whether it is a lower or upper bound
+/// time complexity in average case is log(n) since this is just a walk down the bst
+/// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
+Node * lower_bound(T_k k) {
         /// returns node with smallest key creater than given key
         /// strategy: Loop and try to find the exact key if not found return up a best-canidate key
         return bound(k, root);
     }
 
-    Node * upper_bound(T_k k) {
+Node * upper_bound(T_k k) {
         /// return the node with smalelst key that is strictly greater than the key passed in
         return bound(k, root, true);
     }
 
+    /// helper function that asnwers whether the key intered is a valid candidate for lower or upper bound depending on flag
+    // O(1)
     bool is_valid(T_k cand_key, T_k key, bool upper_bound) {
     ///helper function to determine if a key is valid, depeding on if upper bound is true or we are doing lower bound
     return upper_bound ? (cand_key > key) : (cand_key >= key);
 }
-
-
     Node * bound(T_k key, Node * cur, bool upper_bound = false) {
         if (cur == nullptr) {
             return nullptr; // best candidate is nullPtr
@@ -231,23 +239,25 @@ struct Treap
         return best_candidate;
     }
 
-
+    /// O(1) just returns the size of left and right subtree + itself
     int size() {
         if (root == nullptr) return 0;
         return 1 + root->left_size + root->right_size;
     }
 
     /// this gets the size of the sub tree from node n
+    /// O(1) just returns the size of left and right subtree + itself
     int size(Node* n) {
         return n ? (1 + n->left_size + n->right_size) : 0;
     }
-
-
+    
+    /// back and front both call the same helper function with a flag depending if its back or front
+    /// expected time complexity is O(log n) since we are just walking down the bst 
+    /// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
     Node * back() {
         if (root == nullptr) return nullptr;
         return get_extreme(true, root);
     }
-
     Node * front() {
         if (root == nullptr) return nullptr;
         return get_extreme(false, root);
@@ -266,6 +276,9 @@ struct Treap
    }
 
 
+/// this is the function user calls, recursive helper function is below
+/// time complexity expected is O(log n) because we are just walking down the bst
+/// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
    Node *k_th_element(int k) {
     /// returns the kth element from left to right
     /// strategy: each item stores how many items are in their left sub tree
@@ -285,6 +298,9 @@ struct Treap
     else return k_th_element(k - (cur->left_size + 1), cur->right);
     }
 
+    /// this is the function user calls recursive helper funciton is below
+    /// time complexity expected is O(log n) because we are just walking down the bst
+    /// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
    int rank(Node *node) {
         /// return how many elements smaller are than Node passed in
         /// strategy: at each recursive itteration we keep a count argument initially set to zero
@@ -308,6 +324,9 @@ struct Treap
         }
     }
 
+/// time complexity expected is O(log n) because we are just walking down the bst
+/// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
+/// same time complexity as rank and k_th element because this function uses those functions in its implementation
     Node* predecessor(Node* node) {
         if (node == nullptr) return nullptr;       
         
@@ -318,6 +337,9 @@ struct Treap
         return k_th_element(r - 1);
     }
 
+/// time complexity expected is O(log n) because we are just walking down the bst
+/// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
+/// same time complexity as in upper_bound because this function uses that function in its implementation
     Node* Successor(Node* node) {
         if (node == nullptr) return nullptr;  
 
@@ -325,7 +347,9 @@ struct Treap
         return upper_bound(node->key);
     }
 
-
+  /// this is the function that user calls, recursive helper function is below
+ /// time complexity expected is O(log n) because we are just walking down the bst
+/// Worst case: O(n) if the treap becomes skewed (e.g., priorities do not maintain balance).
     void erase(Node * node){
         ///Remove the node passed in,
         ///Strategy: Set the node we are removing prioriy to a very low valye, (lower than randnumber generator allows)
@@ -376,6 +400,9 @@ struct Treap
         return cur;
     }
 
+    /// O(n + m) where n is amount of nodes in current tree and m the amount in other
+    /// has to first delete all nodes in current o(n) operation doing a postorder traversal,
+    /// then it has to do a preorder traversal in the initializer which is a O(m) operation 
     Treap& operator=(const Treap& other) {
         if (this == &other) return *this;
 
@@ -391,11 +418,14 @@ struct Treap
         return *this;
     }
 
+    /// O(n) where n is the amount of items in the tree, does a post order traversal
     ~Treap(){
-        /// strategy: in order recursion loop, visit both sub trees and only then we can free the current node;
+        /// strategy: post order recursion loop, visit both sub trees and only then we can free the current node;
         postorderDeconstructor(root);
     }
 
+
+    /// O(n)
     void postorderDeconstructor(Node * node) {
         if (node == nullptr) return;
 

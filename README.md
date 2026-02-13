@@ -51,12 +51,23 @@ In this implementation, we use the dynamically sized array introduced earlier to
 Index 0 stores a dummy element to simplify parent/child calculations.
 
 - **Assumptions:** Same assumptions as in the dynamically sized array, because we use it in our implementation here. Additionally, we assume that the type passed in can be compared (`<`, `>`, `<=`, `>=`).
-- **Type:** We implemented a min heap.
+- **Type:** We implemented amin heap.
 - **Kattis Submission:** https://ru.kattis.com/courses/T-403-FORC/FORC2026/assignments/aaohpd/submissions/19117852
 
 ### Hash Table
 
-Not implemented.
+The hash table is implemented as an array of linked lists where each index is a pointer to the head of a linked list containing a Node object that stores a key, a value and a pointer to the next Node.
+
+The hashing algorithms used are modulo hashing for int types and Fowler-Noll-Vo hashing for string types.
+
+For performance, load factors exceeding 0.75 will trigger rehashing where the array size is doubled and every item is re-indexed to maintain amortized O(1) time complexity. Due to the implementation of insertion, true amortized O(1) is not achieved, but is still quite fast.
+
+Access to values are given through bracket operator and the find method. Find returns a pointer to the value member of the node it resides in.
+
+- **Details:** Initial array size: 16. Load factor limit: 0.75. Guaranteed to work with int types, other types unfortunately not well-defined or tested. 
+- **Assumptions:** Keys and values are stored based on initialized type. Key supports equality comparison. Input operations are carefully utilized.
+- **Type:** Separate-Chaining Hash Table Array
+- **Kattis Submission:** https://ru.kattis.com/courses/T-403-FORC/FORC2026/assignments/aaohpd/submissions/19174419
 
 ### Self Balancing Tree (Treap)
 
